@@ -13,7 +13,7 @@ app.get('/', (req, res) => {
 })
 app.get('/read', async (req, res) => {
     const user = await users.find()
-    res.render('read',{user})
+    res.render('read', { user })
 })
 app.post('/create', async (req, res) => {
 
@@ -27,6 +27,26 @@ app.post('/create', async (req, res) => {
 
     await createdUser.save()
 
+    res.redirect('/read')
+})
+
+app.get('/edit/:userId', async (req, res) => {
+    const user = await users.findOne({ _id: req.params.userId })
+    res.render('edit', { user })
+
+})
+
+app.post('/update/:userId', async (req, res) => {
+    const { email, username, imgurl } = req.body
+    const user = await users.findOneAndUpdate({ _id: req.params.userId }, { username, email, imgurl })
+
+
+
+    res.redirect('/read')
+})
+
+app.get('/delete/:userId', async (req, res) => {
+    const user = await users.findOneAndDelete({ _id: req.params.userId })
     res.redirect('/read')
 })
 
